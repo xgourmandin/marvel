@@ -11,7 +11,7 @@ export class HttpHeroesSearcher implements HeroesSearcher {
   }
 
 
-  findHeroesByName(name: string, offset = 0, limit = 20): Promise<HeroesResponse> {
+  findHeroesByName(name: string, offset = 0, limit = 15): Promise<HeroesResponse> {
     return new Promise<HeroesResponse>((resolve, reject) => {
       let timestamp = HttpHeroesSearcher.getTimestamp();
       this.httpService.get(`https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${name}&offset=${offset}&limit=${limit}&ts=${timestamp}&apikey=${process.env.MARVEL_PUBLIC_KEY}&hash=${HttpHeroesSearcher.getHash(timestamp)}`).subscribe(res => {
@@ -28,13 +28,14 @@ export class HttpHeroesSearcher implements HeroesSearcher {
   }
 
   private static getHash(ts: number): string {
-    return createHash('md5').update('' + ts + process.env.MARVEL_PRIVATE_KEY + process.env.MARVEL_PUBLIC_KEY).digest("hex");
+    return createHash('md5').update(ts + process.env.MARVEL_PRIVATE_KEY + process.env.MARVEL_PUBLIC_KEY).digest("hex");
   }
 
   private transform(data) {
     const response = new HeroesResponse();
     response.offset = data.offset;
     response.limit = data.limit;
+    response.total = data.total;
     response.results = data.results.map(r => {
       const hero = new HeroData()
       hero.id = r.id;

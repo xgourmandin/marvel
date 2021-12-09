@@ -2,6 +2,7 @@ export class HeroesResponse {
   results: HeroData[];
   offset: number;
   limit: number;
+  total: number;
 }
 
 class Thumbnail {
