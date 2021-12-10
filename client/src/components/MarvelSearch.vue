@@ -36,7 +36,7 @@ export default {
       this.searchTerm = null;
     },
     searchHeroes: function () {
-      store.dispatch('loadHeroes', this.searchTerm)
+      store.dispatch('setSearchTerm', this.searchTerm)
     }
   }
 }

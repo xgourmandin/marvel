@@ -11,6 +11,6 @@ export class HeroesSearchApi {
 
   @Get()
   public async findHeroes(@Query() searchQuery: HeroesSearchQuery): Promise<HeroesResponse> {
-      return this.searchHeroesUseCase.searchForHeroes(searchQuery.name);
+      return this.searchHeroesUseCase.searchForHeroes(searchQuery.name, searchQuery.page, searchQuery.limit);
   }
 }

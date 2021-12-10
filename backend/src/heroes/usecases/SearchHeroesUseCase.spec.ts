@@ -13,9 +13,9 @@ describe('Search heroes use case', () => {
   });
 
   it('should ask the searcher interface for heroes', async () => {
-    when(heroesSearcher.findHeroesByName('test', 0, 15)).thenResolve();
+    when(heroesSearcher.findHeroesByName('test', 1, 15)).thenResolve();
     await searchHeroesUseCase.searchForHeroes('test');
-    verify(heroesSearcher.findHeroesByName('test', 0, 15)).once();
+    verify(heroesSearcher.findHeroesByName('test', 1, 15)).once();
   })
 
 })

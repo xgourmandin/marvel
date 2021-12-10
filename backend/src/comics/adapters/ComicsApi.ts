@@ -1,11 +1,17 @@
-import {Controller, Get, Param} from "@nestjs/common";
+import {Controller, Get, Param, Query} from "@nestjs/common";
+import {SearchComicsByHeroUseCase} from "../usecases/SearchComicsByHeroUseCase";
+import {ComicsPaginationQuery} from "./ComicsPaginationQuery";
+import {ComicsResponse} from "../usecases/ComicsResponse";
 
 
 @Controller('comics')
 export class ComicsApi {
 
-  @Get('/:id')
-  public getHeroComics(@Param('id') heroId: number) {
+  constructor(private readonly searchComicsUseCae: SearchComicsByHeroUseCase) {
+  }
 
+  @Get('/:id')
+  public async getHeroComics(@Param('id') heroId: number, @Query() paginationParams: ComicsPaginationQuery): Promise<ComicsResponse> {
+    return this.searchComicsUseCae.searchForComicsByHero(heroId, paginationParams.page, paginationParams.limit);
   }
 }

@@ -1,13 +1,8 @@
-export class HeroesResponse {
-  results: HeroData[];
-  offset: number;
-  limit: number;
-  total: number;
-}
+import {MarvelResponseModel} from "../../common/MarvelResponseModel";
+import {Thumbnail} from "../../common/Thumbnail";
 
-class Thumbnail {
-  path: string;
-  extention: string;
+export class HeroesResponse extends MarvelResponseModel {
+  results: HeroData[];
 }
 
 export class HeroData {

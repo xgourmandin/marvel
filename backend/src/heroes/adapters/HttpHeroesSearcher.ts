@@ -1,39 +1,34 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, Logger} from "@nestjs/common";
 import {HeroesSearcher} from "../usecases/HeroesSearcher";
 import {HeroData, HeroesResponse} from "../usecases/HeroesResponse";
 import {createHash} from 'crypto';
 import {HttpService} from "@nestjs/axios";
+import {firstValueFrom} from "rxjs";
+import {MarvelApiQuerier} from "../../common/MarvelApiQuerier";
 
 @Injectable()
-export class HttpHeroesSearcher implements HeroesSearcher {
+export class HttpHeroesSearcher extends MarvelApiQuerier implements HeroesSearcher {
+
+  private readonly logger = new Logger(HttpHeroesSearcher.name);
 
   constructor(private readonly httpService: HttpService) {
+    super();
   }
 
-
-  findHeroesByName(name: string, offset = 0, limit = 15): Promise<HeroesResponse> {
-    return new Promise<HeroesResponse>((resolve, reject) => {
-      let timestamp = HttpHeroesSearcher.getTimestamp();
-      this.httpService.get(`https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${name}&offset=${offset}&limit=${limit}&ts=${timestamp}&apikey=${process.env.MARVEL_PUBLIC_KEY}&hash=${HttpHeroesSearcher.getHash(timestamp)}`).subscribe(res => {
-        if (res.status != 200) {
-          reject(Error(res.statusText))
-        }
-        resolve(this.transform(res.data.data));
-      });
-    })
-  }
-
-  private static getTimestamp(): number {
-    return Date.now();
-  }
-
-  private static getHash(ts: number): string {
-    return createHash('md5').update(ts + process.env.MARVEL_PRIVATE_KEY + process.env.MARVEL_PUBLIC_KEY).digest("hex");
+  findHeroesByName(name: string, page = 1, limit = 15): Promise<HeroesResponse> {
+      const queryParams = this.getCommonQueryParameters(page, limit);
+      queryParams['nameStartsWith'] = name;
+      return firstValueFrom(this.httpService.get('https://gateway.marvel.com:443/v1/public/characters', { params: queryParams }))
+        .then(res => this.transform(res.data.data))
+        .catch(err => {
+          this.logger.error(err);
+          return new HeroesResponse();
+        });
   }
 
   private transform(data) {
     const response = new HeroesResponse();
-    response.offset = data.offset;
+    response.page = this.computePage(data.offset, data.limit);
     response.limit = data.limit;
     response.total = data.total;
     response.results = data.results.map(r => {
@@ -46,4 +41,5 @@ export class HttpHeroesSearcher implements HeroesSearcher {
     })
     return response;
   }
+
 }

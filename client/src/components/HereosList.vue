@@ -2,11 +2,10 @@
   <v-container>
     <v-data-iterator
         :items="heroes"
-        :items-per-page="itemsPerPage"
         no-data-text="Search for your heroes ..."
         :options="pagingOptions"
         :server-items-length="total"
-    @pagination="$emit('pageChange', $event.target.value)">
+    @pagination="paginationChanged">
       <template v-slot:default="{ items }">
         <v-row>
           <v-col
@@ -40,10 +39,16 @@ import store from "../store";
 
 export default {
   name: "HereosList",
+  data() {
+    return {
+      currentPage: 1,
+      currentLimit: 15
+    }
+  },
   computed: {
     ...mapState({
       heroes: state => state.heroes.heroes,
-      pagingOptions: state => ({page: state.heroes.offset / state.heroes.total +1 , itemsPerPage: state.heroes.limit}),
+      pagingOptions: state => ({page: state.heroes.page , itemsPerPage: state.heroes.limit}),
       total: state => state.heroes.total
     })
   },
@@ -51,6 +56,11 @@ export default {
     loadHero: function () {
 
     },
+    paginationChanged: function (e) {
+      if (e.page !== this.currentPage || e.itemsPerPage !== this.currentLimit) {
+        store.dispatch('setPagination', {page: e.page, limit: e.itemsPerPage})
+      }
+    }
   }
 }
 </script>

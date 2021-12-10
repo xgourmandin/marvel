@@ -6,4 +6,5 @@ import {ComicsModule} from "./comics/comics.module";
   imports: [HeroesModule, ComicsModule],
 })
 export class AppModule {
+
 }

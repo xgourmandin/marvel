@@ -1,5 +1,5 @@
 export class HeroesSearchQuery {
   name: string;
-  offset?: number;
+  page?: number;
   limit? :number;
 }
