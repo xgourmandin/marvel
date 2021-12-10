@@ -6,7 +6,8 @@ export default {
     heroes: [],
     page: 1,
     limit: 15,
-    total: 0
+    total: 0,
+    selectedHero: undefined
   },
   mutations: {
     SET_SEARCH_TERM(state, searchTerm) {
@@ -22,19 +23,25 @@ export default {
       state.limit = apiResponse.limit
       state.total = apiResponse.total
     },
+    SELECT_HERO(state, hero) {
+      state.selectedHero = hero
+    }
   },
   actions: {
     setSearchTerm({commit, dispatch}, searchTerm) {
       commit('SET_SEARCH_TERM', searchTerm)
       dispatch('loadHeroes')
     },
-    setPagination({commit, dispatch}, paginationOptions) {
+    setHeroesPagination({commit, dispatch}, paginationOptions) {
       commit('SET_PAGINATION_OPTIONS', paginationOptions)
       dispatch('loadHeroes')
     },
     loadHeroes({state, commit}) {
       api().get('/heroes', {params: { name: state.searchTerm, page: state.page , limit: state.limit  }})
         .then(apiResponse => commit('SET_HEROES', apiResponse.data))
+    },
+    selectHero({commit}, hero) {
+      commit('SELECT_HERO', hero)
     }
   }
 }

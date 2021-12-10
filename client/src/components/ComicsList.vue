@@ -1,11 +1,12 @@
 <template>
   <v-container>
+    <h4>It Appears in :</h4>
     <v-data-iterator
-        :items="heroes"
-        no-data-text="Search for your heroes ..."
+        :items="comics"
+        no-data-text="No comics"
         :options="pagingOptions"
         :server-items-length="total"
-    @pagination="paginationChanged">
+        @pagination="paginationChanged">
       <template v-slot:default="{ items }">
         <v-row>
           <v-col
@@ -22,9 +23,12 @@
                      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                      height="200px">
                 <v-card-title>
-                  <h4 @click="selectHero(item)" class="clickable">{{ item.name }}</h4>
+                  <h5>{{ item.title }}</h5>
                 </v-card-title>
               </v-img>
+              <v-card-text>
+                {{ item.description ? item.description : "No description for this comics" }}
+              </v-card-text>
             </v-card>
           </v-col>
         </v-row>
@@ -34,27 +38,32 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState} from "vuex";
 import store from "../store";
-import router from "../router";
 
 export default {
-  name: "HereosList",
+  name: "ComicsList",
+  props: ['heroId'],
+  mounted() {
+    store.dispatch('loadComics', this.heroId)
+  },
+  data() {
+    return {
+      currentPage: 1,
+      currentLimit: 15
+    }
+  },
   computed: {
     ...mapState({
-      heroes: state => state.heroes.heroes,
-      pagingOptions: state => ({page: state.heroes.page , itemsPerPage: state.heroes.limit}),
-      total: state => state.heroes.total
+      comics: state => state.comics.comics,
+      pagingOptions: state => ({page: state.comics.page , itemsPerPage: state.comics.limit}),
+      total: state => state.comics.total
     })
   },
   methods: {
-    selectHero: function (hero) {
-      store.dispatch('selectHero', hero)
-      router.push({name: 'Details', params: {id: hero.id}})
-    },
     paginationChanged: function (e) {
       if (e.page !== this.pagingOptions.page || e.itemsPerPage !== this.pagingOptions.itemsPerPage) {
-        store.dispatch('setHeroesPagination', {page: e.page, limit: e.itemsPerPage})
+        store.dispatch('setComicsPagination', {page: e.page, limit: e.itemsPerPage})
       }
     }
   }
@@ -62,7 +71,5 @@ export default {
 </script>
 
 <style scoped>
- .clickable:hover {
-   cursor: pointer;
- }
+
 </style>
