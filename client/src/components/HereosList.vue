@@ -5,26 +5,27 @@
         no-data-text="Search for your heroes ..."
         :options="pagingOptions"
         :server-items-length="total"
-    @pagination="paginationChanged">
+        @pagination="paginationChanged">
       <template v-slot:default="{ items }">
         <v-row>
           <v-col
-              v-for="item in items"
-              :key="item.name"
+              v-for="hero in items"
+              :key="hero.name"
               cols="12"
               sm="6"
               md="4"
               lg="3"
           >
             <v-card>
-              <v-img :src="item.thumbnail.path+'/standard_xlarge.'+item.thumbnail.extension"
-                     class="white--text align-end"
-                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                     height="200px">
-                <v-card-title>
-                  <h4 @click="selectHero(item)" class="clickable">{{ item.name }}</h4>
-                </v-card-title>
-              </v-img>
+                <v-img :src="hero.thumbnail.path+'/standard_xlarge.'+hero.thumbnail.extension"
+                       class="white--text align-end clickable"
+                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                       height="200px"
+                @click="selectHero(hero)">
+                  <v-card-title>
+                    <h5 class="clickable">{{ hero.name }}</h5>
+                  </v-card-title>
+                </v-img>
             </v-card>
           </v-col>
         </v-row>
@@ -43,7 +44,7 @@ export default {
   computed: {
     ...mapState({
       heroes: state => state.heroes.heroes,
-      pagingOptions: state => ({page: state.heroes.page , itemsPerPage: state.heroes.limit}),
+      pagingOptions: state => ({page: state.heroes.page, itemsPerPage: state.heroes.limit}),
       total: state => state.heroes.total
     })
   },
@@ -62,7 +63,7 @@ export default {
 </script>
 
 <style scoped>
- .clickable:hover {
-   cursor: pointer;
- }
+.clickable:hover {
+  cursor: pointer;
+}
 </style>

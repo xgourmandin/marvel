@@ -15,7 +15,7 @@ export default {
       state.limit = comicsResponse.limit
       state.total = comicsResponse.total
     },
-    SET_PAGINATION_OPTIONS(state, paginationOptions) {
+    SET_COMICS_PAGINATION_OPTIONS(state, paginationOptions) {
       state.page = paginationOptions.page
       state.limit = paginationOptions.limit
     }
@@ -28,7 +28,7 @@ export default {
         .then(response => commit('SET_COMICS', response.data))
     },
     setComicsPagination({state, commit, dispatch}, paginationOptions) {
-      commit('SET_PAGINATION_OPTIONS', paginationOptions)
+      commit('SET_COMICS_PAGINATION_OPTIONS', paginationOptions)
       dispatch('loadComics', state.heroId)
     },
   },

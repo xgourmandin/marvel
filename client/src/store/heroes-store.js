@@ -13,7 +13,7 @@ export default {
     SET_SEARCH_TERM(state, searchTerm) {
       state.searchTerm = searchTerm
     },
-    SET_PAGINATION_OPTIONS(state, paginationOptions) {
+    SET_HERO_PAGINATION_OPTIONS(state, paginationOptions) {
       state.page = paginationOptions.page
       state.limit = paginationOptions.limit
     },
@@ -33,7 +33,7 @@ export default {
       dispatch('loadHeroes')
     },
     setHeroesPagination({commit, dispatch}, paginationOptions) {
-      commit('SET_PAGINATION_OPTIONS', paginationOptions)
+      commit('SET_HERO_PAGINATION_OPTIONS', paginationOptions)
       dispatch('loadHeroes')
     },
     loadHeroes({state, commit}) {
