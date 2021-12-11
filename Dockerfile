@@ -2,9 +2,10 @@ FROM node:16 AS build-env
 COPY . /app
 WORKDIR /app
 
-RUN cd backend && npm ci --only=production && cd ../client && npm run build
+RUN cd backend && yarn build && cd ../client && yarn build
 
 FROM gcr.io/distroless/nodejs:16
-COPY --from=build-env /app /app
+COPY --from=build-env /app/backend/dist /app
+COPY --from=build-env /app/client/dist /app/client
 WORKDIR /app
-CMD ["hello.js"]
+CMD ["main.js"]
