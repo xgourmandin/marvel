@@ -1,7 +1,7 @@
 # Marvel Search application
 A Marvel Heroes search app
 
-![Tests](https://github.com/github/docs/actions/workflows/node.js.yml/badge.svg) ![Docker](https://github.com/github/docs/actions/workflows/docker-image.yml/badge.svg)
+![Tests](https://github.com/xgourmandin/marvel/actions/workflows/node.js.yml/badge.svg) ![Docker](https://github.com/xgourmandin/marvel/actions/workflows/docker-image.yml/badge.svg)
 
 ## How to start the app
 You'll need:
