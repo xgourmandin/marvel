@@ -1,6 +1,8 @@
 # Marvel Search application
 A Marvel Heroes search app
 
+![Tests](https://github.com/github/docs/actions/workflows/node.js.yml/badge.svg) ![Docker](https://github.com/github/docs/actions/workflows/docker-image.yml/badge.svg)
+
 ## How to start the app
 You'll need:
 - a Marvel Developer API key (public and private keys). [You can have one here](https://developer.marvel.com/).
