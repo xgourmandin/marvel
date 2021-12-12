@@ -20,9 +20,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .hero-image {
-    display: inline;
-  }
-</style>

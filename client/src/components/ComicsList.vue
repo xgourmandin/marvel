@@ -27,7 +27,7 @@
                 </v-card-title>
               </v-img>
               <v-card-text>
-                {{ item.description ? item.description : "No description for this comics" }}
+                {{ item.description || "No description for this comics" }}
               </v-card-text>
             </v-card>
           </v-col>

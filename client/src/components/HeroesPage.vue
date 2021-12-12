@@ -1,16 +1,17 @@
 <template>
 <v-container>
   <MarvelSearch />
-  <HereosList />
+  <HeroesList />
 </v-container>
 </template>
 
 <script>
-import MarvelSearch from "@/components/MarvelSearch";
-import HereosList from "@/components/HereosList";
+import MarvelSearch from "./MarvelSearch";
+import HeroesList from "./HeroesList";
+
 export default {
   name: "HeroesPage",
-  components: {HereosList, MarvelSearch}
+  components: {HeroesList, MarvelSearch}
 }
 </script>
 
