@@ -29,3 +29,6 @@ jobs:
     - name: E2E tests
       run: yarn test:e2e
       working-directory: backend
+      env:
+        MARVEL_PUBLIC_KEY: fakepublickey
+        MARVEL_PRIVATE_KEY: fakeprivatekey
