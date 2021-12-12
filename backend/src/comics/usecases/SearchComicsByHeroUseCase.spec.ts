@@ -13,8 +13,8 @@ describe('Search comics by hero use case', () => {
   })
 
   it('should call a comics research with the correct parameters', async () => {
-    when(comicsSearcher.searchHeroComics(123, 0, 20)).thenResolve();
+    when(comicsSearcher.searchHeroComics(123, 1, 15)).thenResolve();
     await searchUseCase.searchForComicsByHero(123);
-    verify(comicsSearcher.searchHeroComics(123, 0 ,20)).once();
+    verify(comicsSearcher.searchHeroComics(123, 1 ,15)).once();
   })
 })

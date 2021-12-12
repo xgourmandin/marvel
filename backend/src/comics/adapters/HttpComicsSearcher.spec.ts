@@ -1,18 +1,17 @@
-import {HttpHeroesSearcher} from "./HttpHeroesSearcher";
 import {HttpService} from "@nestjs/axios";
-import {anything, capture, instance, mock, verify, when} from "ts-mockito";
+import {anything, capture, instance, mock, when} from "ts-mockito";
 import {AxiosRequestConfig} from "axios";
 import {Observable} from "rxjs";
-import exp from "constants";
+import {HttpComicsSearcher} from "./HttpComicsSearcher";
 
 describe('Marvel API Heroes searcher', () => {
 
-  let searcher: HttpHeroesSearcher;
+  let searcher: HttpComicsSearcher;
   let httpService: HttpService;
 
   beforeEach(() => {
     httpService = mock(HttpService);
-    searcher = new HttpHeroesSearcher(instance(httpService));
+    searcher = new HttpComicsSearcher(instance(httpService));
   })
 
   it('should call correct URL', async () => {
@@ -31,9 +30,9 @@ describe('Marvel API Heroes searcher', () => {
     const marvelpublickey = 'publickey';
     process.env.MARVEL_PUBLIC_KEY = marvelpublickey;
     process.env.MARVEL_PRIVATE_KEY = 'privatekey';
-    await searcher.findHeroesByName('test', 2, 15);
+    await searcher.searchHeroComics(123, 2, 15);
     const [url, config] = capture(httpService.get).last();
-    expect(url).toBe('https://gateway.marvel.com:443/v1/public/characters');
+    expect(url).toBe('https://gateway.marvel.com:443/v1/public/characters/123/comics');
     expect((config as AxiosRequestConfig).params.apikey).toBe(marvelpublickey);
     expect((config as AxiosRequestConfig).params.ts).toBeDefined();
     expect((config as AxiosRequestConfig).params.hash).toBeDefined();
@@ -45,9 +44,9 @@ describe('Marvel API Heroes searcher', () => {
     let offset = 40;
     let limit = 20;
     let total = 75;
-    let heroId = 132;
-    let heroName = 'Test Man';
-    let heroDesc = 'The super hero who tests like nobody else';
+    let comicId = 132;
+    let comicTitle = 'Test Man';
+    let comicDesc = 'The super hero who tests like nobody else';
     let imgPath = 'thumb_path';
     let imgExt = 'svg';
     const axiosResponse = {
@@ -57,9 +56,9 @@ describe('Marvel API Heroes searcher', () => {
           limit: limit,
           total: total,
           results: [{
-            id: heroId,
-            name: heroName,
-            description: heroDesc,
+            id: comicId,
+            title: comicTitle,
+            description: comicDesc,
             thumbnail: {
               path: imgPath,
               extension: imgExt
@@ -75,16 +74,16 @@ describe('Marvel API Heroes searcher', () => {
     when(httpService.get(anything(), anything())).thenReturn(new Observable(sub => sub.next(axiosResponse)));
     process.env.MARVEL_PUBLIC_KEY = 'publickey';
     process.env.MARVEL_PRIVATE_KEY = 'privatekey';
-    const result = await searcher.findHeroesByName('test', 2, 15);
+    const result = await searcher.searchHeroComics(123, 2, 15);
     expect(result.total).toBe(total);
     expect(result.limit).toBe(limit);
     expect(result.page).toBe(3);
     expect(result.results).toHaveLength(1);
-    let heroDatum = result.results[0];
-    expect(heroDatum.id).toBe(heroId);
-    expect(heroDatum.name).toBe(heroName);
-    expect(heroDatum.description).toBe(heroDesc);
-    expect(heroDatum.thumbnail.path).toBe(imgPath);
-    expect(heroDatum.thumbnail.extension).toBe(imgExt);
+    let comicDatum = result.results[0];
+    expect(comicDatum.id).toBe(comicId);
+    expect(comicDatum.title).toBe(comicTitle);
+    expect(comicDatum.description).toBe(comicDesc);
+    expect(comicDatum.thumbnail.path).toBe(imgPath);
+    expect(comicDatum.thumbnail.extension).toBe(imgExt);
   })
 })
